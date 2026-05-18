@@ -1,232 +1,240 @@
-function App() {
-  const handleSearch = () => {
-    alert('Buscando comida...');
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import './App.css';
+import Login from './Login';
+import Register from './Register';
+import Dashboard from './Dashboard';
+import Chat from './Chat';
+
+function LandingPage({ isLoggedIn, onPrimaryCta, onSecondaryCta, onFinalCta, onRegisterClick }) {
+  const handleHeroCta = () => {
+    onPrimaryCta();
   };
 
   return (
     <>
-      <style>
-        {`
-          * {
-            box-sizing: border-box;
-          }
+      <section id="inicio" className="hero">
+        <p className="hero-eyebrow">Uber Eats Smart Assistant</p>
+        <h2 className="hero-title">El asistente inteligente para pedir mejor</h2>
+        <p className="hero-subtitle">
+          Recomienda comida, resuelve dudas y mejora la experiencia del usuario en segundos.
+        </p>
 
-          body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #ffffff;
-            color: #111111;
-          }
+        <div className="hero-actions">
+          <button type="button" className="cta-btn" onClick={handleHeroCta}>
+            Probar asistente
+          </button>
+          <button type="button" className="ghost-btn" onClick={onSecondaryCta}>
+            Ver beneficios
+          </button>
+        </div>
 
-          .page {
-            min-height: 100vh;
-            background: #ffffff;
-          }
-
-          .container {
-            width: min(1120px, 92%);
-            margin: 0 auto;
-          }
-
-          .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 18px 0;
-            border-bottom: 1px solid #f0f0f0;
-          }
-
-          .brand {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-          }
-
-          .green {
-            color: #06c167;
-          }
-
-          .nav-links {
-            display: flex;
-            gap: 22px;
-            color: #1f2937;
-            font-size: 0.95rem;
-          }
-
-          .login-btn {
-            background: #111111;
-            color: #ffffff;
-            border: none;
-            border-radius: 999px;
-            padding: 10px 16px;
-            font-weight: 600;
-            cursor: pointer;
-          }
-
-          .hero {
-            padding: clamp(40px, 7vw, 90px) 0 28px;
-            text-align: left;
-          }
-
-          .hero-title {
-            margin: 0 0 16px;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            line-height: 1.1;
-            max-width: 700px;
-          }
-
-          .hero-subtitle {
-            margin: 0 0 30px;
-            max-width: 640px;
-            color: #4b5563;
-            font-size: clamp(1rem, 2.2vw, 1.2rem);
-            line-height: 1.6;
-          }
-
-          .search-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-          }
-
-          .address-input {
-            flex: 1;
-            min-width: 240px;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 14px 16px;
-            font-size: 1rem;
-            outline: none;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-          }
-
-          .cta-btn {
-            border: none;
-            border-radius: 14px;
-            padding: 14px 22px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: #06c167;
-            box-shadow: 0 10px 20px rgba(6, 193, 103, 0.25);
-            cursor: pointer;
-          }
-
-          .benefits {
-            padding: 24px 0 56px;
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 16px;
-          }
-
-          .benefit-card {
-            background: #ffffff;
-            border: 1px solid #f1f1f1;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-          }
-
-          .benefit-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-          }
-
-          .benefit-title {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #111111;
-          }
-
-          @media (max-width: 920px) {
-            .benefits {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-          }
-
-          @media (max-width: 700px) {
-            .nav-links {
-              display: none;
-            }
-
-            .benefits {
-              grid-template-columns: 1fr;
-            }
-
-            .search-row {
-              flex-direction: column;
-              align-items: stretch;
-            }
-
-            .cta-btn {
-              width: 100%;
-            }
-          }
-        `}
-      </style>
-
-      <main className="page">
-        <div className="container">
-          <nav className="navbar">
-            <h1 className="brand">
-              Uber <span className="green">Eats</span>
-            </h1>
-
-            <div className="nav-links">
-              <span>Explorar</span>
-              <span>Restaurantes</span>
-              <span>Ofertas</span>
-            </div>
-
-            <button type="button" className="login-btn">
-              Iniciar sesion
+        {!isLoggedIn ? (
+          <div className="hero-auth-actions">
+            <button type="button" className="secondary-pill-btn" onClick={onRegisterClick}>
+              Registrarse
             </button>
-          </nav>
+          </div>
+        ) : (
+          <p className="welcome-message">Bienvenido, usuario</p>
+        )}
+      </section>
 
-          <section className="hero">
-            <h2 className="hero-title">
-              Pide tu comida <span className="green">favorita</span>
-            </h2>
-            <p className="hero-subtitle">
-              Descubre restaurantes cerca de ti y recibe tu pedido en minutos.
-            </p>
+      <section id="producto" className="section-card">
+        <h3 className="section-title">Que es Uber Eats Smart Assistant</h3>
+        <p className="section-text">
+          Uber Eats Smart Assistant es un MVP basado en IA simulada que ayuda a los usuarios a decidir que pedir y
+          a resolver dudas frecuentes sobre pedidos, pagos o recomendaciones.
+        </p>
+        <p className="section-text">
+          Esta propuesta reduce la indecision al elegir comida, ofrece soporte automatico y mejora la experiencia del
+          usuario en todo el flujo de pedido.
+        </p>
+      </section>
 
-            <div className="search-row">
-              <input
-                className="address-input"
-                type="text"
-                placeholder="Introduce tu direccion"
-              />
-              <button type="button" className="cta-btn" onClick={handleSearch}>
-                Buscar comida
+      <section className="section-block">
+        <h3 className="section-title">Como funciona</h3>
+        <div className="steps-grid">
+          <article className="step-card">
+            <span className="step-number">1</span>
+            <p className="step-text">El usuario escribe una preferencia o duda</p>
+          </article>
+          <article className="step-card">
+            <span className="step-number">2</span>
+            <p className="step-text">El asistente analiza el mensaje</p>
+          </article>
+          <article className="step-card">
+            <span className="step-number">3</span>
+            <p className="step-text">Devuelve una recomendacion o respuesta automatica</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="beneficios" className="section-block">
+        <h3 className="section-title">Beneficios principales</h3>
+        <div className="benefits">
+          <article className="benefit-card">
+            <h4 className="benefit-title">Ahorro de tiempo</h4>
+            <p className="benefit-text">Respuestas y sugerencias en segundos para decidir mas rapido.</p>
+          </article>
+          <article className="benefit-card">
+            <h4 className="benefit-title">Mejor experiencia de usuario</h4>
+            <p className="benefit-text">Menos friccion durante el pedido con ayuda contextual simple.</p>
+          </article>
+          <article className="benefit-card">
+            <h4 className="benefit-title">Soporte automatico</h4>
+            <p className="benefit-text">Atiende dudas frecuentes sin depender siempre de soporte humano.</p>
+          </article>
+          <article className="benefit-card">
+            <h4 className="benefit-title">Recomendaciones personalizadas</h4>
+            <p className="benefit-text">Sugiere opciones segun gustos y necesidad del usuario.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="final-cta">
+        <h3 className="final-cta-title">Listo para probar el asistente?</h3>
+        <button type="button" className="cta-btn" onClick={onFinalCta}>
+          Empezar ahora
+        </button>
+      </section>
+    </>
+  );
+}
+
+function AppLayout() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+  }, []);
+
+  const handleLogin = () => {
+    localStorage.setItem('isLoggedIn', 'true');
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
+    navigate('/');
+  };
+
+  const goToSection = (sectionId) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+      return;
+    }
+
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const isLoginPage = location.pathname === '/login';
+  const isRegisterPage = location.pathname === '/register';
+  const isDashboardPage = location.pathname === '/dashboard';
+  const isChatPage = location.pathname === '/chat';
+  const hideMainNavbar = isDashboardPage || isChatPage;
+
+  return (
+    <main className="page">
+      <div className="container">
+        {!hideMainNavbar && (
+        <nav className="navbar">
+          <button type="button" className="brand-btn" onClick={() => navigate('/')}>
+            <span className="brand">
+              Uber <span className="green">Eats</span>
+            </span>
+          </button>
+
+          <div className="nav-links">
+            <button type="button" className="nav-link-btn" onClick={() => goToSection('inicio')}>
+              Inicio
+            </button>
+            <button type="button" className="nav-link-btn" onClick={() => goToSection('producto')}>
+              Producto
+            </button>
+            <button type="button" className="nav-link-btn" onClick={() => goToSection('beneficios')}>
+              Beneficios
+            </button>
+            <button type="button" className="nav-link-btn" onClick={() => navigate('/chat')}>
+              Asistente
+            </button>
+            <button type="button" className="nav-link-btn" onClick={() => navigate('/login')}>
+              Login
+            </button>
+          </div>
+
+          {!isLoggedIn ? (
+            <div className="auth-actions">
+              <button type="button" className="register-btn" onClick={() => navigate('/register')}>
+                Registrarse
+              </button>
+              <button type="button" className="login-btn" onClick={() => navigate('/login')}>
+                Iniciar sesion
               </button>
             </div>
-          </section>
+          ) : (
+            <div className="account-actions">
+              <button type="button" className="account-btn" onClick={() => navigate('/')}>
+                Mi cuenta
+              </button>
+              <button type="button" className="logout-btn" onClick={handleLogout}>
+                Cerrar sesion
+              </button>
+            </div>
+          )}
+        </nav>
+        )}
 
-          <section className="benefits">
-            <article className="benefit-card">
-              <div className="benefit-icon">⚡</div>
-              <p className="benefit-title">Entrega rapida</p>
-            </article>
-            <article className="benefit-card">
-              <div className="benefit-icon">🍔</div>
-              <p className="benefit-title">Miles de restaurantes</p>
-            </article>
-            <article className="benefit-card">
-              <div className="benefit-icon">📍</div>
-              <p className="benefit-title">Seguimiento en tiempo real</p>
-            </article>
-            <article className="benefit-card">
-              <div className="benefit-icon">🔒</div>
-              <p className="benefit-title">Pagos seguros</p>
-            </article>
-          </section>
-        </div>
-      </main>
-    </>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LandingPage
+                isLoggedIn={isLoggedIn}
+                onPrimaryCta={() => navigate('/chat')}
+                onSecondaryCta={() => goToSection('beneficios')}
+                onFinalCta={() => navigate('/chat')}
+                onRegisterClick={() => navigate('/register')}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              isLoggedIn ? (
+                <Navigate to="/" replace />
+              ) : (
+                <Login onLoginSuccess={handleLogin} />
+              )
+            }
+          />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard onLogout={handleLogout} />} />
+          <Route path="/chat" element={<Chat onBack={() => navigate('/')} />} />
+          <Route path="*" element={<Navigate to={isLoginPage || isRegisterPage ? '/login' : '/'} replace />} />
+        </Routes>
+      </div>
+    </main>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
   );
 }
 
